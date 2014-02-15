@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 import argparse
 
 def parse_args():
@@ -13,3 +14,14 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
+
+    try:
+        with open(args.destination_file):
+            overwrite = overwrite_prompt(args.destination_file)
+            if overwrite:
+                convert_deck(args.source_file, args.destination_file)
+            else:
+                sys.stderr.write(args.destination_file + " will not be overwritten! Exiting ...")
+                sys.exit(1)
+    except IOError:
+        convert_deck(args.source_file, args.destination_file)
