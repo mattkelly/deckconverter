@@ -32,7 +32,7 @@ def convert_deck(source_file, destination_file):
     return method(source_file)
 
 def validate_extensions(source_ext, destination_ext):
-    valid_extensions = ["cod", "csv"]
+    valid_extensions = ["cod", "coll", "csv", "dec", "mwdeck"]
     if source_ext not in valid_extensions:
         exit("'" + source_ext + "' is not a valid extension!", 1)
     if destination_ext not in valid_extensions:
