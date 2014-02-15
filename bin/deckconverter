@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import sys
 import argparse
+from deck import Deck
+from card import Card
 
 def parse_args():
     desc = "A utility for converting between card deck formats"
@@ -15,7 +17,7 @@ def parse_args():
 def overwrite_prompt(filename):
     invalid = True
     while invalid:
-        sys.stdout.write(filename + " exists!. Do you want to overwrite it? [y/n]")
+        sys.stdout.write(filename + " exists!. Do you want to overwrite it? [y/n] ")
         choice = raw_input().lower()[:1]
         if choice == "y" or choice == "n":
             invalid = False
