@@ -12,7 +12,7 @@ class Card:
         self.mvid = mvid
 
     def __eq__(self, other):
-        if not isinstance(other, Deck):
+        if not isinstance(other, Card):
             return False
 
         return (self.name == other.name and 
