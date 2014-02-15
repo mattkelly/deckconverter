@@ -12,6 +12,16 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def overwrite_prompt(filename):
+    invalid = True
+    while invalid:
+        sys.stdout.write(filename + " exists!. Do you want to overwrite it? [y/n]")
+        choice = raw_input().lower()[:1]
+        if choice == "y" or choice == "n":
+            invalid = False
+        
+    return choice == "y"
+
 if __name__ == "__main__":
     args = parse_args()
 
