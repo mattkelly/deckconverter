@@ -19,3 +19,5 @@ class Card:
                 self.set_name == other.set_name and
                 self.mvid == other.mvid)
 
+    def __hash__(self):
+        return hash((self.name, self.set_name, self.mvid))
