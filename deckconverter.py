@@ -22,6 +22,13 @@ def overwrite_prompt(filename):
         
     return choice == "y"
 
+def convert_deck(source_file, destination_file):
+    source_ext = get_file_extension(source_file)
+    destination_ext = get_file_extension(destination_file)
+
+def get_file_extension(filename):
+    return filename.split(".")[-1]
+
 if __name__ == "__main__":
     args = parse_args()
 
