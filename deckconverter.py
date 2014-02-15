@@ -25,20 +25,59 @@ def overwrite_prompt(filename):
 def convert_deck(source_file, destination_file):
     source_ext = get_file_extension(source_file)
     destination_ext = get_file_extension(destination_file)
+    validate_extensions(source_ext, destination_ext)
+    method = getattr(sys.modules[__name__], "_".join([source_ext, "to", destination_ext]))
+    return method(source_file)
+
+def validate_extensions(source_ext, destination_ext):
+    valid_extensions = ["cod", "csv"]
+    if source_ext not in valid_extensions:
+        exit("'" + source_ext + "' is not a valid extension!", 1)
+    if destination_ext not in valid_extensions:
+        exit("'" + destination_ext + "' is not a valid extension!", 1)
 
 def get_file_extension(filename):
     return filename.split(".")[-1]
 
+def csv_to_cod(filename):
+    return False
+
+def cod_to_csv(filename):
+    return False
+
+def validate_source_file(filename):
+    try:
+        with open(filename):
+            pass
+    except IOError:
+        exit(filename + " does not exist! Exiting ...", 1)
+
+def validate_destination_file(filename):
+    try:
+        with open(filename):
+            overwrite = overwrite_prompt(filename)
+            if overwrite:
+                pass
+            else:
+                exit(args.destination_file + " will not be overwritten! Exiting ...", 1)
+    except IOError:
+        pass
+
+def exit(message, code):
+    if code == 0:
+        print message
+    else:
+        sys.stderr.write(message)
+
+    sys.exit(code)
+
 if __name__ == "__main__":
     args = parse_args()
+    validate_source_file(args.source_file)
+    validate_destination_file(args.destination_file)
+    converted = convert_deck(args.source_file, args.destination_file)
 
-    try:
-        with open(args.destination_file):
-            overwrite = overwrite_prompt(args.destination_file)
-            if overwrite:
-                convert_deck(args.source_file, args.destination_file)
-            else:
-                sys.stderr.write(args.destination_file + " will not be overwritten! Exiting ...")
-                sys.exit(1)
-    except IOError:
-        convert_deck(args.source_file, args.destination_file)
+    if converted:
+        exit("Successfully converted " + args.source_file + " to " + args.destination_file + "!", 0)
+    else:
+        exit("Failed to convert " + args.source_file + " to " + args.destination_file + "!", 1)
