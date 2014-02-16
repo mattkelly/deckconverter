@@ -2,8 +2,8 @@
 Simple tests - to be removed later
 """
 
-from deck import Deck
-from card import Card
+from deckconverter.deck import Deck
+from deckconverter.card import Card
 
 test1 = Card("Forest", "Gatecrashers", "1")
 test2 = Card("Island", "Born of the Gods", "2")
