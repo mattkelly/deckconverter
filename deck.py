@@ -23,6 +23,12 @@ class Deck:
             self.sideboard[card] += quantity 
         else:
             self.sideboard[card] = quantity
+    
+    def get_name(self):
+        return self.name
+
+    def get_description(self):
+        return self.description
 
     def get_main(self):
         return self.main
@@ -30,7 +36,21 @@ class Deck:
     def get_sideboard(self):
         return self.sideboard
 
-    def print_main(self):
-        # TODO actually implement this (or __repr__ and __str__)
-        print self.main
+    def __repr__(self):
+        out = 'Main Deck:\n\n'
 
+        if len(self.main) == 0:
+            out += '   (empty)\n'
+        else:
+            for card in sorted(self.main.iterkeys()):
+                out += "   [%3d] %s\n" % (self.main[card], card)
+
+        out += '\nSideboard:\n\n'
+
+        if len(self.sideboard) == 0:
+            out += '   (empty)\n'
+        else:
+            for card in sorted(self.sideboard.iterkeys()):
+                out += "   [%3d] %s\n" % (self.sideboard[card], card)
+
+        return out
