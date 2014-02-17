@@ -49,16 +49,16 @@ class Converter:
         return True
 
     def parse_cod(self, cod_in):
-        pass
+        raise NotImplementedError('cod parsing not yet supported!')
 
     def parse_coll(self, cod_in):
-        pass
+        raise NotImplementedError('coll parsing not yet supported!')
 
     def parse_dec(self, cod_in):
-        pass
+        raise NotImplementedError('dec parsing not yet supported!')
 
     def parse_mwdeck(self, cod_in):
-        pass
+        raise NotImplementedError('mwdeck parsing not yet supported!')
 
     def write_csv(self, csv_out):
         # TODO make sure some parse method has been called first
@@ -84,16 +84,16 @@ class Converter:
         return True
 
     def write_cod(self, cod_out):
-        pass
+        raise NotImplementedError('cod writing not yet supported!')
 
     def write_coll(self, cod_out):
-        pass
+        raise NotImplementedError('coll writing not yet supported!')
 
     def write_dec(self, cod_out):
-        pass
+        raise NotImplementedError('dec writing not yet supported!')
 
     def write_mwdeck(self, cod_out):
-        pass
+        raise NotImplementedError('mwdeck writing not yet supported!')
 
     def convert(self, source_file, destination_file):
         parse_method = getattr(self, 'parse_' + self.get_file_extension(source_file))
