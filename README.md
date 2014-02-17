@@ -4,7 +4,7 @@ deckconverter
 ##About
 
 ###Description
-A utility for converting between Magic: The Gathering deck formats.
+A utility for converting between *Magic: The Gathering* deck formats.
 
 ###Authors
   * Matthew Kelly - <matthew.joseph.kelly@gmail.com>
