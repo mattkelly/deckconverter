@@ -12,11 +12,18 @@ A utility for converting between Magic: The Gathering deck formats.
 
 ##Getting Started
 
-###Installation
+###Installing from pip
 `pip install deckconverter`
 
+###Installing from source
+```
+git clone git@github.com:mattkelly/deckconverter.git
+cd deckconverter
+./setup install
+```
+
 ###Testing
-`nosetests`
+`./setup test`
 
 ###Examples
 `deckconverter mydeck.csv mydeck.cod`
