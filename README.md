@@ -4,7 +4,7 @@ deckconverter
 ##About
 
 ###Description
-A utility for converting between Magic: The Gathering deck formats.
+A utility for converting between *Magic: The Gathering* deck formats.
 
 ###Authors
   * Matthew Kelly - <matthew.joseph.kelly@gmail.com>
@@ -12,11 +12,21 @@ A utility for converting between Magic: The Gathering deck formats.
 
 ##Getting Started
 
-###Installation
+###Installing from pip
 `pip install deckconverter`
 
+###Installing from source
+```
+git clone git@github.com:mattkelly/deckconverter.git
+cd deckconverter
+sudo pip install .
+```
+
 ###Testing
-`nosetests`
+```
+sudo pip install nose
+nosetests
+```
 
 ###Examples
 `deckconverter mydeck.csv mydeck.cod`
