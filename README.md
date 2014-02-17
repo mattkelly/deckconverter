@@ -1,4 +1,4 @@
 deckconverter
 =============
 
-A utility for converting between trading card deck formats.
+A utility for converting between Magic: The Gathering deck formats.
