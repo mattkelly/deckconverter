@@ -3,6 +3,7 @@ import sys
 import argparse
 from deckconverter.deck import Deck
 from deckconverter.card import Card
+from deckconverter.converter import Converter
 
 def parse_args():
     desc = "A utility for converting between card deck formats"
@@ -28,11 +29,11 @@ def convert_deck(source_file, destination_file):
     source_ext = get_file_extension(source_file)
     destination_ext = get_file_extension(destination_file)
     validate_extensions(source_ext, destination_ext)
-    method = getattr(sys.modules[__name__], "_".join([source_ext, "to", destination_ext]))
-    return method(source_file)
+    converter = Converter()
+    return converter.convert(source_file, destination_file)
 
 def validate_extensions(source_ext, destination_ext):
-    valid_extensions = ["cod", "coll", "csv", "dec", "mwdeck"]
+    valid_extensions = ["cod", "coll", "csv", "dec", "txt", "mwdeck"]
     if source_ext not in valid_extensions:
         exit("'" + source_ext + "' is not a valid extension!", 1)
     if destination_ext not in valid_extensions:
