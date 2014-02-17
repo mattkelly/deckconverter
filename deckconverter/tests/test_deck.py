@@ -18,17 +18,17 @@ class TestDeck(unittest.TestCase):
 
     # test deck .add_to_main() / .get_main()
     def test_add_to_main(self):
-        card = Card('Test Card - Main', 'Test Set - Main')
+        card = Card('Forest')
         self.deck.add_to_main(card)
         main = self.deck.get_main()
         self.assertTrue(len(main) == 1)
-        self.assertTrue(main.keys()[0].get_name() == 'Test Card - Main')
+        self.assertTrue(main.keys()[0].get_name() == 'Forest')
 
     # test deck .add_to_sideboard() / .get_sideboard()
     def test_add_to_sideboard(self):
-        card = Card('Test Card - Sideboard', 'Test Set - Sideboard')
+        card = Card('Island')
         self.deck.add_to_sideboard(card)
         sideboard = self.deck.get_sideboard()
         self.assertTrue(len(sideboard) == 1)
-        self.assertTrue(sideboard.keys()[0].get_name() == 'Test Card - Sideboard')
+        self.assertTrue(sideboard.keys()[0].get_name() == 'Island')
 
