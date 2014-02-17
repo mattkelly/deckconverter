@@ -28,5 +28,7 @@ setup(
     classifiers=[],
     description='A utility for converting between card deck formats',
     long_description=open('README.md').read(),
+    tests_require=open('requirements/tests.txt').readlines(),
+    test_suite='nose.collector',
     install_requires=requirements
 )
