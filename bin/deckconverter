@@ -41,12 +41,6 @@ def validate_extensions(source_ext, destination_ext):
 def get_file_extension(filename):
     return filename.split(".")[-1]
 
-def csv_to_cod(filename):
-    return False
-
-def cod_to_csv(filename):
-    return False
-
 def validate_source_file(filename):
     try:
         with open(filename):
