@@ -4,6 +4,7 @@ TODO
 
 import sys
 import csv
+import xml.etree.ElementTree as ET
 from deckconverter.deck import Deck
 from deckconverter.card import Card
 
@@ -11,7 +12,6 @@ class Converter:
 
     def __init__(self):
         self.deck = Deck()
-        self.parse_called = False
 
     def get_file_extension(self, filename):
         return filename.split(".")[-1]
@@ -47,11 +47,31 @@ class Converter:
                 sys.stderr.write("ERROR: %s line %d: %s\n" % (csv_in, reader.line_num, e))
                 return False
                      
-        self.parse_called = True
         return True
 
     def parse_cod(self, cod_in):
-        raise NotImplementedError('cod parsing not yet supported!')
+        tree = ET.parse(cod_in)
+        root = tree.getroot()
+        
+        name = root[0].text
+        description = root[1].text
+
+        main = root[2]
+        sideboard = root[3]
+
+        for card_element in main:
+            main_qty = int(card_element.attrib['number'])
+            name = card_element.attrib['name']
+            card = Card(name)
+            self.deck.add_to_main(card, main_qty)
+
+        for card_element in sideboard:
+            sideboard_qty = int(card_element.attrib['number'])
+            name = card_element.attrib['name']
+            card = Card(name)
+            self.deck.add_to_sideboard(card, sideboard_qty)
+
+        return True
 
     def parse_coll(self, cod_in):
         raise NotImplementedError('coll parsing not yet supported!')
@@ -63,11 +83,6 @@ class Converter:
         raise NotImplementedError('mwdeck parsing not yet supported!')
 
     def write_csv(self, csv_out, sort_by, reverse):
-        if not self.parse_called:
-            sys.stderr.write('ERROR: no parse method called before calling write_csv\n')
-            return False        
-
-        # TODO enable sorting 
         header = ['Count', 'Name', 'Sideboard']
         rows = []
         for card in self.deck.get_sorted_cards(sort_by, reverse):
