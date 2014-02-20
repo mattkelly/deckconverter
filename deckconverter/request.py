@@ -25,6 +25,8 @@ def get_card_details(name, set_name, mvid):
                 set_name = expansion.find_all('a')[-1].get_text()
 
             set_name = set_name.rsplit('(', 1)[0]
+            if set_name.endswith(' '):
+                set_name = set_name[:-1]
 
         return {
             'set_name': set_name,
