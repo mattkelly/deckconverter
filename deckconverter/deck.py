@@ -32,17 +32,23 @@ class Deck:
     def get_description(self):
         return self.description
 
+    def get_sorted_cards(self, sort_by = 'name', reverse = False):
+        # TODO error checking on sort_by
+        if sort_by == 'name': 
+            return sorted(self.deck.keys(), key = lambda x: x.get_name(), reverse = reverse)
+        if sort_by == 'main_qty':
+            pass # TODO
+        if sort_by == 'sideboard_qty':
+            pass # TODO
+
     def iteritems(self):
         return self.deck.iteritems()
 
     def get_quantity(self):
         return len(deck)
 
-    #def get_main(self):
-        #return self.main
-
-    #def get_sideboard(self):
-        #return self.sideboard
+    def __getitem__(self, card):  
+        return self.deck[card]
 
     def __repr__(self):
 

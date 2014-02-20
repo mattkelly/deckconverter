@@ -11,6 +11,7 @@ class Converter:
 
     def __init__(self):
         self.deck = Deck()
+        self.parse_called = False
 
     def get_file_extension(self, filename):
         return filename.split(".")[-1]
@@ -46,6 +47,7 @@ class Converter:
                 sys.stderr.write("ERROR: %s line %d: %s\n" % (csv_in, reader.line_num, e))
                 return False
                      
+        self.parse_called = True
         return True
 
     def parse_cod(self, cod_in):
@@ -60,17 +62,22 @@ class Converter:
     def parse_mwdeck(self, cod_in):
         raise NotImplementedError('mwdeck parsing not yet supported!')
 
-    def write_csv(self, csv_out):
-        # TODO make sure some parse method has been called first
+    def write_csv(self, csv_out, sort_by, reverse):
+        if not self.parse_called:
+            sys.stderr.write('ERROR: no parse method called before calling write_csv\n')
+            return False        
+
         # TODO enable sorting 
         header = ['Count', 'Name', 'Sideboard']
-        #rows = [[] for i in deck.get_quantity()]
         rows = []
-        for card, quantities in self.deck.iteritems():
-            (main_qty, sideboard_qty) = quantities
+        for card in self.deck.get_sorted_cards(sort_by, reverse):
+            (main_qty, sideboard_qty) = self.deck[card]
             rows.append( [main_qty, card.get_name(), sideboard_qty] )
+            
+        #for card, quantities in self.deck.iteritems():
+            #(main_qty, sideboard_qty) = quantities
+            #rows.append( [main_qty, card.get_name(), sideboard_qty] )
 
-        print rows
         with open(csv_out, 'wb') as csv_file:
             writer = csv.writer(csv_file)
             try:
@@ -95,14 +102,14 @@ class Converter:
     def write_mwdeck(self, cod_out):
         raise NotImplementedError('mwdeck writing not yet supported!')
 
-    def convert(self, source_file, destination_file):
+    def convert(self, source_file, destination_file, sort_by = 'name', reverse = False):
         parse_method = getattr(self, 'parse_' + self.get_file_extension(source_file))
         write_method = getattr(self, 'write_' + self.get_file_extension(destination_file))
         # TODO error checking
         if not parse_method(source_file):
             return False
         print self.deck
-        if not write_method(destination_file):
+        if not write_method(destination_file, sort_by, reverse):
             return False
         return True
         
