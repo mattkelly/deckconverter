@@ -16,15 +16,15 @@ class Deck:
 
     def add_to_main(self, card, quantity = 1):
         if card in self.deck:
-            self.deck[card][0] += quantity 
+            self.deck[card] = (self.deck[card][0] + quantity, self.deck[card][1])
         else:
             self.deck[card] = (quantity, 0)
 
     def add_to_sideboard(self, card, quantity = 1):
-        if card in self.sideboard:
-            self.sideboard[card][1] += quantity 
+        if card in self.deck:
+            self.deck[card] = (self.deck[card][0], self.deck[card][1] + quantity)
         else:
-            self.sideboard[card] = (0, quantity)
+            self.deck[card] = (0, quantity)
     
     def get_name(self):
         return self.name
