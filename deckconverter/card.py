@@ -6,14 +6,11 @@ import request
 
 class Card:
     
-    def __init__(self, name, set_name = '', mvid = ''):
+    def __init__(self, name, set_name = None, mvid = None):
         self.name = name
         self.set_name = set_name
         self.mvid = mvid
-        if self.set_name == '':
-            self.__set_set_name()
-        if self.mvid == '':
-            self.__set_mvid()
+        self.__set_card_details()
 
     def __eq__(self, other):
         if not isinstance(other, Card):
@@ -23,8 +20,11 @@ class Card:
                 self.set_name == other.set_name and
                 self.mvid == other.mvid)
 
-    def __set_set_name(self):
-        self.set_name = request.get_set_name(self.name)
+    def __set_card_details(self):
+        if self.set_name == None or self.mvid == None:
+            details = request.get_card_details(self.name, self.set_name, self.mvid)
+            self.mvid = details['mvid']
+            self.set_name = details['set_name']
 
     def __set_mvid(self):
         self.mvid = request.get_mvid(self.name, self.set_name)
