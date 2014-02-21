@@ -56,21 +56,21 @@ class Converter:
         name = root[0].text
         description = root[1].text
 
-        main = root[2]
-        sideboard = root[3]
+        for zone in root.findall('zone'):
+            if zone.attrib['name'].lower() == 'main': 
+                for card_element in zone:
+                    main_qty = int(card_element.attrib['number'])
+                    name = card_element.attrib['name']
+                    card = Card(name)
+                    self.deck.add_to_main(card, main_qty)
 
-        for card_element in main:
-            main_qty = int(card_element.attrib['number'])
-            name = card_element.attrib['name']
-            card = Card(name)
-            self.deck.add_to_main(card, main_qty)
-
-        for card_element in sideboard:
-            sideboard_qty = int(card_element.attrib['number'])
-            name = card_element.attrib['name']
-            card = Card(name)
-            self.deck.add_to_sideboard(card, sideboard_qty)
-
+            elif zone.attrib['name'].lower() == 'sideboard':
+                for card_element in zone:
+                    sideboard_qty = int(card_element.attrib['number'])
+                    name = card_element.attrib['name']
+                    card = Card(name)
+                    self.deck.add_to_sideboard(card, sideboard_qty)
+                    
         return True
 
     def parse_coll(self, cod_in):
@@ -89,10 +89,6 @@ class Converter:
             (main_qty, sideboard_qty) = self.deck[card]
             rows.append( [main_qty, card.get_name(), sideboard_qty] )
             
-        #for card, quantities in self.deck.iteritems():
-            #(main_qty, sideboard_qty) = quantities
-            #rows.append( [main_qty, card.get_name(), sideboard_qty] )
-
         with open(csv_out, 'wb') as csv_file:
             writer = csv.writer(csv_file)
             try:
