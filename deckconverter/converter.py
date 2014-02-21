@@ -2,9 +2,14 @@
 TODO
 """
 
+# Use ElementTree C implementation if available
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
+import xml.dom.minidom as minidom
 import sys
 import csv
-import xml.etree.ElementTree as ET
 from deckconverter.deck import Deck
 from deckconverter.card import Card
 
@@ -12,6 +17,11 @@ class Converter:
 
     def __init__(self):
         self.deck = Deck()
+
+    def prettify_xml(self, element):
+        rough_string = ET.tostring(element, 'UTF-8')
+        reparsed = minidom.parseString(rough_string)
+        return reparsed.toprettyxml(indent = '    ', encoding = 'UTF-8')
 
     def get_file_extension(self, filename):
         return filename.split(".")[-1]
@@ -101,8 +111,36 @@ class Converter:
 
         return True
 
-    def write_cod(self, cod_out):
-        raise NotImplementedError('cod writing not yet supported!')
+    def write_cod(self, cod_out, sort_by, reverse):
+        # TODO error checking
+        root = ET.Element('cockatrice_deck', {'version' : '1'})
+        main = ET.SubElement(root, 'zone', {'name' : 'main'})
+        sideboard = ET.SubElement(root, 'zone', {'name' : 'sideboard'})
+
+        if self.deck.get_name():
+            ET.SubElement(root, 'deckname').text = self.deck.get_name()
+        if self.deck.get_description():
+            ET.SubElement(root, 'comments').text = self.deck.get_description()
+
+        for card in self.deck.get_sorted_cards(sort_by, reverse):
+            (main_qty, sideboard_qty) = self.deck[card]
+            if main_qty > 0:
+                ET.SubElement(main, 'card', {
+                    'number' : str(main_qty),
+                    'price'  : str(card.get_price()),
+                    'name'   : card.get_name()
+                })
+            if sideboard_qty > 0:
+                ET.SubElement(sideboard, 'card', {
+                    'number' : str(sideboard_qty),
+                    'price'  : str(card.get_price()),
+                    'name'   : card.get_name()
+                })
+
+            with open(cod_out, 'w') as cod_file:
+                cod_file.write(self.prettify_xml(root))
+
+        return True
 
     def write_coll(self, cod_out):
         raise NotImplementedError('coll writing not yet supported!')

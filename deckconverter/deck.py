@@ -40,6 +40,8 @@ class Deck:
             pass # TODO
         if sort_by == 'sideboard_qty':
             pass # TODO
+        if sort_by == 'price':
+            pass # TODO
 
     def iteritems(self):
         return self.deck.iteritems()
