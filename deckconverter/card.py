@@ -38,6 +38,9 @@ class Card:
     def get_mvid(self):
         return self.mvid
 
+    def get_price(self):
+        return 0 # TODO
+
     def __hash__(self):
         return hash((self.name, self.set_name, self.mvid))
 
