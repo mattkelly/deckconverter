@@ -11,8 +11,6 @@ class Deck:
         self.description = description
         # deck is a dict { Card: (main_qty, sideboard_qty) }
         self.deck = {}
-        #self.main = {}
-        #self.sideboard = {}
 
     def add_to_main(self, card, quantity = 1):
         if card in self.deck:
