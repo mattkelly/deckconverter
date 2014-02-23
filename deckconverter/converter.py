@@ -8,6 +8,7 @@ try:
 except ImportError:
     import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
+import xml.parsers.expat as expat
 import sys
 import csv
 from deckconverter.deck import Deck
@@ -60,26 +61,32 @@ class Converter:
         return True
 
     def parse_cod(self, cod_in):
-        tree = ET.parse(cod_in)
-        root = tree.getroot()
-        
-        name = root[0].text
-        description = root[1].text
+        try:
+            tree = ET.parse(cod_in)
+            root = tree.getroot()
+            
+            name = root[0].text
+            description = root[1].text
 
-        for zone in root.findall('zone'):
-            if zone.attrib['name'].lower() == 'main': 
-                for card_element in zone:
-                    main_qty = int(card_element.attrib['number'])
-                    name = card_element.attrib['name']
-                    card = Card(name)
-                    self.deck.add_to_main(card, main_qty)
+            for zone in root.findall('zone'):
+                if zone.attrib['name'].lower() == 'main': 
+                    for card_element in zone:
+                        main_qty = int(card_element.attrib['number'])
+                        name = card_element.attrib['name']
+                        card = Card(name)
+                        self.deck.add_to_main(card, main_qty)
 
-            elif zone.attrib['name'].lower() == 'sideboard':
-                for card_element in zone:
-                    sideboard_qty = int(card_element.attrib['number'])
-                    name = card_element.attrib['name']
-                    card = Card(name)
-                    self.deck.add_to_sideboard(card, sideboard_qty)
+                elif zone.attrib['name'].lower() == 'sideboard':
+                    for card_element in zone:
+                        sideboard_qty = int(card_element.attrib['number'])
+                        name = card_element.attrib['name']
+                        card = Card(name)
+                        self.deck.add_to_sideboard(card, sideboard_qty)
+
+        except ParseError as e:
+            (line, col) = e.position
+            sys.stderr.write("ERROR: %s line %d, column %d: %s\n" % (cod_in, line, col, expat.ErrorString(e.code)))
+            return False
                     
         return True
 
