@@ -119,10 +119,11 @@ class Converter:
         return True
 
     def write_cod(self, cod_out, sort_by, reverse):
-        # TODO error checking
         root = ET.Element('cockatrice_deck', {'version' : '1'})
-        main = ET.SubElement(root, 'zone', {'name' : 'main'})
-        sideboard = ET.SubElement(root, 'zone', {'name' : 'sideboard'})
+        if self.deck.get_main_quantity() > 0:
+            main = ET.SubElement(root, 'zone', {'name' : 'main'})
+        if self.deck.get_sideboard_quantity() > 0:
+            sideboard = ET.SubElement(root, 'zone', {'name' : 'sideboard'})
 
         if self.deck.get_name():
             ET.SubElement(root, 'deckname').text = self.deck.get_name()

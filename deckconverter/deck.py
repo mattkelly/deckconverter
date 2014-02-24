@@ -11,18 +11,22 @@ class Deck:
         self.description = description
         # deck is a dict { Card: (main_qty, sideboard_qty) }
         self.deck = {}
+        self.main_qty = 0
+        self.sideboard_qty = 0
 
     def add_to_main(self, card, quantity = 1):
         if card in self.deck:
             self.deck[card] = (self.deck[card][0] + quantity, self.deck[card][1])
         else:
             self.deck[card] = (quantity, 0)
+        self.main_qty += quantity
 
     def add_to_sideboard(self, card, quantity = 1):
         if card in self.deck:
             self.deck[card] = (self.deck[card][0], self.deck[card][1] + quantity)
         else:
             self.deck[card] = (0, quantity)
+        self.sideboard_qty += quantity
     
     def get_name(self):
         return self.name
@@ -46,6 +50,12 @@ class Deck:
 
     def get_quantity(self):
         return len(deck)
+
+    def get_main_quantity(self):
+        return self.main_qty
+
+    def get_sideboard_quantity(self):
+        return self.sideboard_qty
 
     def __getitem__(self, card):  
         return self.deck[card]
