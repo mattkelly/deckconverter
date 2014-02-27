@@ -1,3 +1,11 @@
+"""
+A module to fetch missing card details from gatherer.wizards.com.
+
+Supported requests:
+    set / expansion name (default: grab latest if no info available)
+    mvid
+"""
+
 from bs4 import BeautifulSoup
 import requests
 

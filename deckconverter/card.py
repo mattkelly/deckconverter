@@ -1,5 +1,5 @@
 """
-TODO header
+Card class - a simple container for card information.
 """
 
 import request

@@ -1,5 +1,7 @@
 """
-TODO header
+Deck class - a deck holds cards and quantities of those cards.
+
+Supports main deck as well as a sideboard.
 """
 
 from card import Card

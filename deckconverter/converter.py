@@ -1,5 +1,13 @@
 """
-TODO
+Converter class to convert a parse and write different deck formats.
+
+Supported deck formats:
+    .cod
+    .coll
+    .csv
+    .dec
+    .text
+    .mwdeck
 """
 
 # Use ElementTree C implementation if available
