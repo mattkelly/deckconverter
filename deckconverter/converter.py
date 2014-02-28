@@ -38,11 +38,16 @@ class Converter:
     def parse_csv(self, csv_in):
         with open(csv_in, 'rb') as csv_file:
             reader = csv.reader(csv_file)
+            has_price_avg = True
             try:
                 header = reader.next()
                 main_qty_index = header.index('Count')
                 name_index = header.index('Name')
                 sideboard_qty_index = header.index('Sideboard')
+                try:
+                    price_avg_index = header.index('Price Avg')
+                except ValueError:
+                    has_price_avg = False
                 
                 for row in reader:
                     if len(row) == 0:
@@ -56,6 +61,10 @@ class Converter:
                     sideboard_qty = int(row[sideboard_qty_index])
 
                     card = Card(name)
+
+                    if has_price_avg:
+                        price_avg = row[price_avg_index]
+                        card.set_price_avg(price_avg)
 
                     if main_qty > 0:
                         self.deck.add_to_main(card, main_qty)
@@ -108,11 +117,11 @@ class Converter:
         raise NotImplementedError('mwdeck parsing not yet supported!')
 
     def write_csv(self, csv_out, sort_by, reverse):
-        header = ['Count', 'Name', 'Sideboard']
+        header = ['Count', 'Name', 'Price Avg', 'Sideboard']
         rows = []
         for card in self.deck.get_sorted_cards(sort_by, reverse):
             (main_qty, sideboard_qty) = self.deck[card]
-            rows.append( [main_qty, card.get_name(), sideboard_qty] )
+            rows.append( [main_qty, card.get_name(), card.get_price_avg(), sideboard_qty] )
             
         with open(csv_out, 'wb') as csv_file:
             writer = csv.writer(csv_file)
@@ -143,13 +152,13 @@ class Converter:
             if main_qty > 0:
                 ET.SubElement(main, 'card', {
                     'number' : str(main_qty),
-                    'price'  : str(card.get_price()),
+                    'price'  : str(card.get_price_avg()),
                     'name'   : card.get_name()
                 })
             if sideboard_qty > 0:
                 ET.SubElement(sideboard, 'card', {
                     'number' : str(sideboard_qty),
-                    'price'  : str(card.get_price()),
+                    'price'  : str(card.get_price_avg()),
                     'name'   : card.get_name()
                 })
 

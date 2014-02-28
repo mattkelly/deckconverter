@@ -10,6 +10,7 @@ class Card:
         self.name = name
         self.set_name = set_name
         self.mvid = mvid
+        self.price_avg = "$0.0"
         self.__set_card_details()
 
     def __eq__(self, other):
@@ -38,11 +39,15 @@ class Card:
     def get_mvid(self):
         return self.mvid
 
-    def get_price(self):
-        return 0 # TODO
+    def set_price_avg(self, price):
+        self.price_avg = price
+
+    def get_price_avg(self):
+        return self.price_avg
 
     def __hash__(self):
         return hash((self.name, self.set_name, self.mvid))
 
     def __repr__(self):
         return "%s from %s (mvid = %s)" % (self.name, self.set_name, self.mvid)
+
