@@ -70,7 +70,7 @@ class Deck:
         out = 'Main Deck:\n\n'
 
         empty = False
-        for card in sorted(self.deck.iterkeys()):
+        for card in self.get_sorted_cards():
             main_qty = self.deck[card][0]
             if main_qty > 0:
                 out += "   [%3d] %s\n" % (self.deck[card][0], card)
@@ -82,7 +82,7 @@ class Deck:
         out += '\nSideboard:\n\n'
 
         empty = True
-        for card in sorted(self.deck.iterkeys()):
+        for card in self.get_sorted_cards():
             sideboard_qty = self.deck[card][1]
             if sideboard_qty > 0:
                 out += "   [%3d] %s\n" % (self.deck[card][1], card)
