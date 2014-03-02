@@ -10,6 +10,8 @@ Supported deck formats:
     .mwdeck
 """
 
+import re
+
 # Use ElementTree C implementation if available
 try:
     import xml.etree.cElementTree as ET
@@ -111,7 +113,21 @@ class Converter:
         raise NotImplementedError('coll parsing not yet supported!')
 
     def parse_dec(self, cod_in):
-        raise NotImplementedError('dec parsing not yet supported!')
+        re_first = re.compile(r'')
+        re_second = re.compile('^\s*(\d)\s+(.+)\s*$')
+        with open(cod_in, 'r') as dec_file:
+            for line in dec_file:
+                # ///mvid:265418 qty:4 name:Azor's Elocutors loc:Deck 
+                match = re_first.match(line)
+                if match:
+                match = re_second.match(line)
+                if match:
+                    main_count = match.group(1)
+                    name = match.group(2)
+                    print match.group(0)
+                    print match.group(1)
+                    print match.group(2)
+                  
 
     def parse_mwdeck(self, cod_in):
         raise NotImplementedError('mwdeck parsing not yet supported!')
