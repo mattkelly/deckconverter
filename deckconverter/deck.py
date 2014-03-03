@@ -47,9 +47,6 @@ class Deck:
         if sort_by == 'price':
             pass # TODO
 
-    def iteritems(self):
-        return self.deck.iteritems()
-
     def get_quantity(self):
         return len(deck)
 
