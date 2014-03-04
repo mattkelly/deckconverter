@@ -113,21 +113,33 @@ class Converter:
         raise NotImplementedError('coll parsing not yet supported!')
 
     def parse_dec(self, cod_in):
-        re_first = re.compile(r'')
-        re_second = re.compile('^\s*(\d)\s+(.+)\s*$')
+        # TODO error checking
+        # ///mvid:265418 qty:4 name:Azor's Elocutors loc:(Deck|SB)
+        re_first = re.compile(r'///mvid:(\d+)\s+qty:(\d+)\s+name:(.+)\s+loc:(Deck|SB)')
+        # TODO is second line just redundant?
+        # (SB:)? 4 Azor's Electors
+        #re_second = re.compile(r'^\s*(\d)\s+(.+)\s*$')
         with open(cod_in, 'r') as dec_file:
             for line in dec_file:
-                # ///mvid:265418 qty:4 name:Azor's Elocutors loc:Deck 
                 match = re_first.match(line)
                 if match:
-                    match = re_second.match(line)
-                if match:
-                    main_count = match.group(1)
-                    name = match.group(2)
-                    print match.group(0)
-                    print match.group(1)
-                    print match.group(2)
-                  
+                    mvid = match.group(1)
+                    qty = int(match.group(2))
+                    name = match.group(3)
+                    loc = match.group(4)
+
+                    card = Card(name)
+                    if loc == 'Deck':
+                        self.deck.add_to_main(card, qty)
+                    else:
+                        self.deck.add_to_sideboard(card, qty)
+
+                    #match = re_second.match(line)
+                    #if match:
+                        #qty = match.group(1)
+                        #name = match.group(2)
+
+        return True
 
     def parse_mwdeck(self, cod_in):
         raise NotImplementedError('mwdeck parsing not yet supported!')
@@ -136,8 +148,13 @@ class Converter:
         header = ['Count', 'Name', 'Price Avg', 'Sideboard']
         rows = []
         for card in self.deck.get_sorted_cards(sort_by, reverse):
-            (main_qty, sideboard_qty) = self.deck[card]
-            rows.append( [main_qty, card.get_name(), card.get_price_avg(), 0] )
+            main_qty= self.deck[card][0]
+            if main_qty > 0:
+                rows.append( [main_qty, card.get_name(), card.get_price_avg(), 0] )
+
+        # Always write sideboard second
+        for card in self.deck.get_sorted_cards(sort_by, reverse):
+            sideboard_qty = self.deck[card][1]
             if sideboard_qty > 0:
                 rows.append( [sideboard_qty, card.get_name(), card.get_price_avg(), 1] )
             
@@ -185,13 +202,34 @@ class Converter:
 
         return True
 
-    def write_coll(self, cod_out):
+    def write_coll(self, coll_out):
         raise NotImplementedError('coll writing not yet supported!')
 
-    def write_dec(self, cod_out):
-        raise NotImplementedError('dec writing not yet supported!')
+    def write_dec(self, dec_out, sort_by, reverse):
+        # TODO error checking
+        with open(dec_out, 'w') as dec_file:
+            deck_name = self.deck.get_name()
+            deck_desc = self.deck.get_description()
+            if deck_name:
+                dec_file.write("// Name: %s\n" % deck_name)
+            if deck_desc:
+                dec_file.write("// Description: %s\n" % deck_desc)
+            for card in self.deck.get_sorted_cards(sort_by, reverse):
+                main_qty= self.deck[card][0]
+                if main_qty > 0:
+                    dec_file.write("///mvid:%s qty:%d name:%s loc:Deck\n" % (card.get_mvid(), main_qty, card.get_name()))
+                    dec_file.write("%d %s\n" % (main_qty, card.get_name()))
+     
+            # Always write sideboard second
+            for card in self.deck.get_sorted_cards(sort_by, reverse):
+                sideboard_qty = self.deck[card][1]
+                if sideboard_qty > 0:
+                    dec_file.write("///mvid:%s qty:%d name:%s loc:SB\n" % (card.get_mvid(), sideboard_qty, card.get_name()))
+                    dec_file.write("SB: %d %s\n" % (sideboard_qty, card.get_name()))
 
-    def write_mwdeck(self, cod_out):
+        return True
+
+    def write_mwdeck(self, mwdeck_out):
         raise NotImplementedError('mwdeck writing not yet supported!')
 
     def convert(self, source_file, destination_file, sort_by = 'name', reverse = False):
