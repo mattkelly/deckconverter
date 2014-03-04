@@ -43,9 +43,9 @@ class Converter:
             has_price_avg = True
             try:
                 header = reader.next()
-                main_qty_index = header.index('Count')
+                qty_index = header.index('Count')
                 name_index = header.index('Name')
-                sideboard_qty_index = header.index('Sideboard')
+                sideboard_index = header.index('Sideboard') # Boolean indicating whether this is for sideboard or not
                 try:
                     price_avg_index = header.index('Price Avg')
                 except ValueError:
@@ -58,9 +58,9 @@ class Converter:
                         sys.stderr.write("ERROR: line %d is malformed in %s\n" % (reader.line_num, csv_in))
                         return False
 
-                    main_qty = int(row[main_qty_index])
+                    qty = int(row[qty_index])
                     name = row[name_index] 
-                    sideboard_qty = int(row[sideboard_qty_index])
+                    sideboard = int(row[sideboard_index])
 
                     card = Card(name)
 
@@ -68,10 +68,10 @@ class Converter:
                         price_avg = row[price_avg_index]
                         card.set_price_avg(price_avg)
 
-                    if main_qty > 0:
-                        self.deck.add_to_main(card, main_qty)
-                    if sideboard_qty > 0:
-                        self.deck.add_to_sideboard(card, sideboard_qty)
+                    if not sideboard:
+                        self.deck.add_to_main(card, qty)
+                    else:
+                        self.deck.add_to_sideboard(card, qty)
 
             except csv.Error as e:
                 sys.stderr.write("ERROR: %s line %d: %s\n" % (csv_in, reader.line_num, e))
@@ -120,7 +120,7 @@ class Converter:
                 # ///mvid:265418 qty:4 name:Azor's Elocutors loc:Deck 
                 match = re_first.match(line)
                 if match:
-                match = re_second.match(line)
+                    match = re_second.match(line)
                 if match:
                     main_count = match.group(1)
                     name = match.group(2)
@@ -137,7 +137,9 @@ class Converter:
         rows = []
         for card in self.deck.get_sorted_cards(sort_by, reverse):
             (main_qty, sideboard_qty) = self.deck[card]
-            rows.append( [main_qty, card.get_name(), card.get_price_avg(), sideboard_qty] )
+            rows.append( [main_qty, card.get_name(), card.get_price_avg(), 0] )
+            if sideboard_qty > 0:
+                rows.append( [sideboard_qty, card.get_name(), card.get_price_avg(), 1] )
             
         with open(csv_out, 'wb') as csv_file:
             writer = csv.writer(csv_file)

@@ -64,7 +64,7 @@ class Deck:
         if len(self.deck) == 0:
             return 'This deck is empty!\n'
 
-        out = 'Main Deck:\n\n'
+        out = "Main Deck (%d total):\n\n" % self.main_qty
 
         empty = False
         for card in self.get_sorted_cards():
@@ -76,7 +76,7 @@ class Deck:
         if empty:
             out += '   (empty)\n'
 
-        out += '\nSideboard:\n\n'
+        out += "\nSideboard (%d total):\n\n" % self.sideboard_qty
 
         empty = True
         for card in self.get_sorted_cards():
